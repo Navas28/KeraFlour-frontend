@@ -1,7 +1,9 @@
-export default function Home() {
-  return (
-  <main>
+import Products from "./components/Products/Products";
 
-  </main>
-  );
+export default function Home() {
+    return (
+        <main>
+            <Products />
+        </main>
+    );
 }

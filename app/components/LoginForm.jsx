@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebaseClient";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginForm() {
+    const {fetchUser} = useAuth()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -25,32 +28,23 @@ export default function LoginForm() {
 
         setLoading(true);
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const token = await userCredential.user.getIdToken();
-
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/auth/sync-user`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token }),
+                body: JSON.stringify({ email, password }),
             });
             const data = await res.json();
-            setSuccess("Login successful!");
-            setEmail("");
-            setPassword("");
-        } catch (err) {
-            switch (err.code) {
-                case "auth/invalid-email":
-                    setError("Invalid email format.");
-                    break;
-                case "auth/wrong-password":
-                    setError("Incorrect password. Please try again.");
-                    break;
-                case "auth/invalid-credential":
-                    setError("Invalid credentials. Please try again.");
-                    break;
-                default:
-                    setError("Something went wrong. Please try again later.");
+
+            if (res.ok) {
+                localStorage.setItem("token", data.token);
+                setSuccess("Login successful!");
+                await fetchUser()
+                router.push("/");
+            } else {
+                setError(data.message || "Invalid credentials");
             }
+        } catch (err) {
+            setError("Server error, try again later.");
         } finally {
             setLoading(false);
         }
@@ -82,7 +76,7 @@ export default function LoginForm() {
                                 Welcome Back
                             </h2>
                             <p className="text-sm" style={{ color: "var(--color-light2)" }}>
-                                Please sign in to your account
+                                Please Login to your account
                             </p>
                         </div>
 
@@ -185,7 +179,7 @@ export default function LoginForm() {
                                 e.target.style.boxShadow = "0 10px 20px rgba(52, 87, 78, 0.3)";
                             }}
                         >
-                            Sign In
+                            Login
                         </button>
 
                         {error && (

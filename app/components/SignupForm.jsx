@@ -1,7 +1,5 @@
 "use client";
 
-import { auth } from "@/firebaseClient";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -25,30 +23,25 @@ export default function SignupForm() {
 
         try {
             setLoading(true);
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-            const token = await userCredential.user.getIdToken();
-
-            await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/auth/sync-user`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, name }),
+                body: JSON.stringify({ name, email, password }),
             });
 
-            setSuccess("Signup successful! You can now log in");
-            setName("");
-            setEmail("");
-            setPassword("");
-        } catch (err) {
-            if (err.code === "auth/email-already-in-use") {
-                setError("This email is already registered. Try logging in.");
-            } else if (err.code === "auth/invalid-email") {
-                setError("Please enter a valid email address.");
-            } else if (err.code === "auth/weak-password") {
-                setError("Password should be at least 6 characters.");
+            const data = await res.json();
+
+            if (res.ok) {
+                setSuccess("Signup successful! You can now log in");
+                setName("");
+                setEmail("");
+                setPassword("");
             } else {
-                setError(err.message);
+                setError(data.message || "Something went wrong");
             }
+        } catch (err) {
+            setError("Server error, try again later.");
         } finally {
             setLoading(false);
         }

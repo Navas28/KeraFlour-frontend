@@ -2,6 +2,9 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import AuthProvider from "@/context/AuthContext";
+import CartProvider from "@/context/CartContext";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -26,9 +29,25 @@ export default function RootLayout({ children }) {
                 <link rel="manifest" href="/site.webmanifest" />
             </head>
             <body className={poppins.className}>
-                <Navbar />
-                {children}
-                <Footer />
+                <AuthProvider>
+                    <CartProvider>
+                        <Navbar />
+                        {children}
+                        <Footer />
+                    </CartProvider>
+                </AuthProvider>
+
+                <Toaster
+                    position="bottom-right"
+                    richColors
+                    toastOptions={{
+                        style: {
+                            borderRadius: "12px",
+                            fontSize: "15px",
+                            padding: "12px 16px",
+                        },
+                    }}
+                />
             </body>
         </html>
     );
