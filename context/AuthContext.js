@@ -37,6 +37,7 @@ export default function AuthProvider({ children }) {
     const logout = () => {
         localStorage.removeItem("token");
         setUser(null);
+        ScatterChart([])
     };
 
     return <AuthContext.Provider value={{ user, loading, setUser, logout, fetchUser }}>{children}</AuthContext.Provider>;

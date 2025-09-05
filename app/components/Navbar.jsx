@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { ShieldUser, ShoppingCart } from "lucide-react";
+import { ShieldUser, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -42,14 +42,17 @@ export default function Navbar() {
                         </Link>
                     </div>
                     <div className="flex items-center justify-end gap-3">
-                        <Link href="/cart" className="relative">
-                            <ShoppingCart size={28} />
-                            {cart.length > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
-                                    {cart.length}
-                                </span>
-                            )}
-                        </Link>
+                        {user && (
+                            <Link href="/cart" className="relative">
+                                <ShoppingBag size={28} />
+                                {cart.length > 0 && (
+                                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-2 py-.5 rounded-full">
+                                        {cart.length}
+                                    </span>
+                                )}
+                            </Link>
+                        )}
+
                         {user ? (
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-dark1 font-semibold text-white">

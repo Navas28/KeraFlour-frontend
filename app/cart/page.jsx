@@ -1,12 +1,16 @@
-'use client'
+"use client";
 
 import { useCart } from "@/context/CartContext";
 import React from "react";
+import Loading from "../components/UI/Loading";
 
 export default function CartPage() {
-    const { cart, removeFromCart, clearCart } = useCart();
+    const { cart, loading, removeFromCart, clearCart } = useCart();
 
     const totalAmount = cart.reduce((acc, item) => acc + item.pricePerKg * item.quantityKg, 0);
+    if (loading) {
+        return <Loading />;
+    }
 
     if (cart.length === 0) {
         return (
@@ -15,17 +19,17 @@ export default function CartPage() {
             </div>
         );
     }
+
     return (
         <div className="p-6 max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold mb-6">🛍️ Your Cart</h2>
 
             <div className="space-y-4">
-                {cart.map((item) => (
+                {cart.map((item, index) => (
                     <div
-                        key={item._id}
+                        key={item.product || index}
                         className="flex items-center justify-between border p-4 rounded-lg shadow-sm bg-white"
                     >
-                        {/* Image */}
                         <div className="flex items-center gap-4">
                             <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-md" />
                             <div>
@@ -39,10 +43,8 @@ export default function CartPage() {
                                 </p>
                             </div>
                         </div>
-
-                        {/* Remove Button */}
                         <button
-                            onClick={() => removeFromCart(item._id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                         >
                             Remove
@@ -51,7 +53,6 @@ export default function CartPage() {
                 ))}
             </div>
 
-            {/* Cart Footer */}
             <div className="mt-6 flex justify-between items-center border-t pt-4">
                 <h3 className="text-xl font-bold">Total: ₹{totalAmount.toFixed(2)}</h3>
                 <div className="flex gap-3">
