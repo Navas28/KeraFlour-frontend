@@ -49,7 +49,14 @@ export default function CartProvider({ children }) {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/cart/items`, {
                 method: "POST",
                 headers: authHeader(),
-                body: JSON.stringify({ productId: product._id, quantityKg }),
+                body: JSON.stringify({
+                    productId: product._id,
+                    quantityKg,
+                    name: product.name,
+                    pricePerKg: product.pricePerKg,
+                    image: product.image,
+                    slug: product.slug,
+                }),
             });
             if (!res.ok) throw new Error("Failed to add item");
             const data = await res.json();
@@ -93,8 +100,42 @@ export default function CartProvider({ children }) {
         }
     };
 
+    const createOrder = async (orderData) => {
+        if (!user) {
+            toast.error("⚠️ Please login to place an order");
+            return;
+        }
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/orders`, {
+                method: "POST",
+                headers: authHeader(),
+                body: JSON.stringify(orderData),
+            });
+
+            if (!res.ok) throw new Error("Failed to create order");
+
+            const data = await res.json();
+            clearCart();
+            return data;
+        } catch (err) {
+            console.error("Order create error", err);
+            toast.error("❌ Could not place order");
+            throw err;
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cart, loading, fetchCart, addToCart, removeFromCart, clearCart }}>
+        <CartContext.Provider
+            value={{
+                cart,
+                loading,
+                fetchCart,
+                addToCart,
+                removeFromCart,
+                clearCart,
+                createOrder,
+            }}
+        >
             {children}
         </CartContext.Provider>
     );

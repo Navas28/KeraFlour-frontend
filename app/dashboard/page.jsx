@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Loading from "../components/UI/Loading";
 import Link from "next/link";
+import { Trash2 } from "lucide-react";
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -105,14 +106,21 @@ export default function Dashboard() {
                                 </button>
                                 <button
                                     onClick={() => handleDelete(product.slug)}
-                                    className="px-3 py-1 text-sm bg-red-600 text-white rounded"
+                                    // disabled
+                                     // remove disabled for development
+                                    className="px-3 py-1 text-sm bg-red-600 flex text-white rounded"
                                 >
-                                    Delete
+                                    <Trash2 size={18} /> (Disabled)
                                 </button>
                             </div>
                         </div>
                     ))}
                 </div>
+            )}
+            {!loading && (
+                <p className="mt-8 text-sm text-black rounded-md py-2 bg-yellow-100 text-center tracking-wide">
+                    ⚠️ Note: Delete and Update features are disabled to prevent misuse.
+                </p>
             )}
             {editingProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -149,8 +157,13 @@ export default function Dashboard() {
                                 >
                                     Cancel
                                 </button>
-                                <button type="submit" className="px-3 py-1 text-sm bg-green-600 text-white rounded">
-                                    Update
+                                <button
+                                    type="submit"
+                                    // disabled
+                                     // remove disabled for development
+                                    className="px-3 py-1 text-sm bg-green-600 text-white rounded"
+                                >
+                                    Update (Disabled)
                                 </button>
                             </div>
                         </form>
