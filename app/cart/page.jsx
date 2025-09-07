@@ -29,6 +29,9 @@ export default function CartPage() {
     const finalAmount = totalAmount + addOnCharge;
 
     const handleCheckout = async () => {
+        if(finalAmount < 50){
+              return toast.error("Minimum order amount is ₹50. Please add more products.");
+        }
         if (addOn === "delivery" && !deliveryAddress.trim()) {
             return toast.error("Enter delivery address");
         }
@@ -67,9 +70,23 @@ export default function CartPage() {
                 toast.success("Order placed successfully!");
                 router.push(`/order-success/${newOrder._id}`);
             }
-        } else if (paymentMethod === "razorpay") {
-            // 👉 integrate Razorpay here
-            toast.info("Redirecting to Razorpay...");
+        } else if (paymentMethod === "stripe") {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/payments/stripe-checkout`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify({ orderData }),
+                });
+
+                const { url } = await res.json();
+                window.location.href = url;
+            } catch (error) {
+                console.error("Stripe error", error);
+                toast.error("Stripe payment failed");
+            }
         }
     };
 
@@ -202,11 +219,11 @@ export default function CartPage() {
                         <input
                             type="radio"
                             name="payment"
-                            value="razorpay"
-                            checked={paymentMethod === "razorpay"}
+                            value="stripe"
+                            checked={paymentMethod === "stripe"}
                             onChange={(e) => setPaymentMethod(e.target.value)}
                         />
-                        <span className="ml-2">Razorpay</span>
+                        <span className="ml-2">Stripe <i className="text-red-600 text-xs">* above 50</i></span>
                     </label>
                 </div>
             </div>
