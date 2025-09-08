@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import Loading from "../UI/Loading";
+import Loading from "./UI/Loading";
 
 export default function Products() {
     const [products, setProducts] = useState([]);

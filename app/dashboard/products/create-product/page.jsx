@@ -47,9 +47,15 @@ export default function CreateProduct() {
         <div className="p-6 max-w-xl mx-auto">
             <nav className="text-sm mb-4">
                 <ul className="flex items-center gap-2 text-gray-600">
-                    <li>
+                      <li>
                         <Link href="/dashboard" className="hover:underline text-blue-600">
                             Dashboard
+                        </Link>
+                    </li>
+                    <li>/</li>
+                    <li>
+                        <Link href="/dashboard/products" className="hover:underline text-blue-600">
+                            Products
                         </Link>
                     </li>
                     <li>/</li>

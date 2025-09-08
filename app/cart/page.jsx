@@ -29,9 +29,6 @@ export default function CartPage() {
     const finalAmount = totalAmount + addOnCharge;
 
     const handleCheckout = async () => {
-        if(finalAmount < 50){
-              return toast.error("Minimum order amount is ₹50. Please add more products.");
-        }
         if (addOn === "delivery" && !deliveryAddress.trim()) {
             return toast.error("Enter delivery address");
         }
@@ -71,6 +68,9 @@ export default function CartPage() {
                 router.push(`/order-success/${newOrder._id}`);
             }
         } else if (paymentMethod === "stripe") {
+            if (finalAmount < 50) {
+                return toast.error("Minimum order amount for Stripe is ₹50. Please add more products.");
+            }
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/payments/stripe-checkout`, {
                     method: "POST",
@@ -223,7 +223,9 @@ export default function CartPage() {
                             checked={paymentMethod === "stripe"}
                             onChange={(e) => setPaymentMethod(e.target.value)}
                         />
-                        <span className="ml-2">Stripe <i className="text-red-600 text-xs">* above 50</i></span>
+                        <span className="ml-2">
+                            Stripe <i className="text-red-600 text-xs">* above 50</i>
+                        </span>
                     </label>
                 </div>
             </div>
