@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Loading from "../../components/UI/Loading";
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit3, Plus, ChevronRight, Package, AlertTriangle, X } from "lucide-react";
 
 export default function ProductPage() {
     const { user } = useAuth();
@@ -28,6 +28,7 @@ export default function ProductPage() {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -53,7 +54,7 @@ export default function ProductPage() {
             setEditingProduct(null);
             fetchProducts();
         } catch (error) {
-            console.error(err);
+            console.error(error);
             toast.error("Failed to update product");
         }
     };
@@ -63,7 +64,7 @@ export default function ProductPage() {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/products/${slug}`, {
                 method: "DELETE",
             });
-            if (!res.ok) throw new Error("Delet failed");
+            if (!res.ok) throw new Error("Delete failed");
             toast.success("Product Deleted");
             fetchProducts();
         } catch (error) {
@@ -71,27 +72,43 @@ export default function ProductPage() {
             toast.error("Failed to delete product");
         }
     };
+
     return (
-        <div className="p-6 max-w-6xl mx-auto">
-             <nav className="text-sm mb-4">
-                <ul className="flex items-center gap-2 text-gray-600">
-                      <li>
-                        <Link href="/dashboard" className="hover:underline text-blue-600">
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li>/</li>
-                    <li className="text-gray-800 font-medium"> Products</li>
-                </ul>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
+            <nav className="mb-8">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Link href="/" className="hover:text-emerald-600 transition">
+                        Home
+                    </Link>
+                    <ChevronRight size={16} />
+                    <Link href="/dashboard" className="hover:text-emerald-600 transition">
+                        Dashboard
+                    </Link>
+                    <ChevronRight size={16} />
+                    <span className="text-gray-800 font-medium">Products</span>
+                </div>
             </nav>
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-3xl font-bold">Dashboard – Product Management</h1>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Product Management</h1>
+                    <p className="text-lg text-gray-600">Manage your flour products and inventory</p>
+                </div>
                 <Link
                     href="/dashboard/products/create-product"
-                    className="bg-dark1 text-white px-5 py-2 rounded-lg font-semibold hover:bg-dark2 transition"
+                    className="inline-flex items-center gap-2 bg-dark1 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg hover:shadow-xl text-lg"
                 >
-                    + Create Product
+                    <Plus size={20} />
+                    Create Product
                 </Link>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8">
+                <div className="flex items-center gap-3">
+                    <AlertTriangle size={20} className="text-yellow-600" />
+                    <p className="text-yellow-800 font-medium">
+                        ⚠️ Note: Delete and Update features are disabled to prevent misuse during demo.
+                    </p>
+                </div>
             </div>
 
             {loading ? (
@@ -99,82 +116,117 @@ export default function ProductPage() {
                     <Loading />
                 </div>
             ) : products.length === 0 ? (
-                <p className="text-gray-600">No products found.</p>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                    <Package size={48} className="mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">No products found</h3>
+                    <p className="text-gray-600 mb-6">Start by creating your first flour product.</p>
+                    <Link
+                        href="/dashboard/products/create-product"
+                        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                    >
+                        <Plus size={18} />
+                        Create First Product
+                    </Link>
+                </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {products.map((product) => (
-                        <div key={product._id} className="border rounded-xl p-4 shadow-sm bg-white">
-                            <img src={product.image} alt={product.name} className="h-40 w-full object-cover rounded-md" />
-                            <h2 className="mt-3 font-semibold text-lg">{product.name}</h2>
-                            <p className="text-gray-600">₹ {product.pricePerKg}/Kg</p>
-
-                            <div className="flex gap-2 mt-4">
-                                <button
-                                    onClick={() => setEditingProduct(product)}
-                                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(product.slug)}
-                                    // disabled
-                                     // remove disabled for development
-                                    className="px-3 py-1 text-sm bg-red-600 flex text-white rounded"
-                                >
-                                    <Trash2 size={18} /> (Disabled)
-                                </button>
+                        <div
+                            key={product._id}
+                            className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                        >
+                            <div className="aspect-square bg-gray-50 flex items-center justify-center p-4">
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className="w-full h-full object-contain rounded-lg"
+                                />
+                            </div>
+                            <div className="p-5">
+                                <h3 className="font-bold text-lg text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
+                                <p className="text-green-700 font-bold text-xl mb-4 tracking-wider">₹{product.pricePerKg}/kg</p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setEditingProduct(product)}
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-dark1  text-white rounded-lg font-medium transition text-sm"
+                                    >
+                                        <Edit3 size={16} />
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(product.slug)}
+                                        disabled
+                                        className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Trash2 size={16} />
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
             )}
-            {!loading && (
-                <p className="mt-8 text-sm text-black rounded-md py-2 bg-yellow-100 text-center tracking-wide">
-                    ⚠️ Note: Delete and Update features are disabled to prevent misuse.
-                </p>
-            )}
-            {editingProduct && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h2 className="text-xl font-bold mb-4">Edit Product</h2>
-                        <form onSubmit={handleUpdate} className="space-y-4">
-                            <input
-                                type="text"
-                                value={editingProduct.name}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                                className="w-full border p-2 rounded"
-                                placeholder="Product Name"
-                                required
-                            />
-                            <input
-                                type="number"
-                                value={editingProduct.pricePerKg}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, pricePerKg: e.target.value })}
-                                className="w-full border p-2 rounded"
-                                placeholder="Price Per Kg"
-                                required
-                            />
-                            <input
-                                type="file"
-                                onChange={(e) => setEditingProduct({ ...editingProduct, imageFile: e.target.files[0] })}
-                                className="w-full"
-                            />
 
-                            <div className="flex justify-end gap-2">
+            {editingProduct && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                            <h2 className="text-xl font-bold text-gray-900">Edit Product</h2>
+                            <button
+                                onClick={() => setEditingProduct(null)}
+                                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                            >
+                                <X size={20} className="text-gray-500" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleUpdate} className="p-6 space-y-5">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                                <input
+                                    type="text"
+                                    value={editingProduct.name}
+                                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                    placeholder="Enter product name"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Price Per Kg (₹)</label>
+                                <input
+                                    type="number"
+                                    value={editingProduct.pricePerKg}
+                                    onChange={(e) => setEditingProduct({ ...editingProduct, pricePerKg: e.target.value })}
+                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                    placeholder="Enter price per kg"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setEditingProduct({ ...editingProduct, imageFile: e.target.files[0] })}
+                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Leave empty to keep current image</p>
+                            </div>
+                            <div className="flex gap-3 pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setEditingProduct(null)}
-                                    className="px-3 py-1 text-sm bg-gray-400 text-white rounded"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    // disabled
-                                     // remove disabled for development
-                                    className="px-3 py-1 text-sm bg-green-600 text-white rounded"
+                                    disabled
+                                    className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Update (Disabled)
+                                    Update Product
                                 </button>
                             </div>
                         </form>

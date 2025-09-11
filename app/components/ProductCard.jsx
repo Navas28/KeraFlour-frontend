@@ -19,47 +19,62 @@ export default function ProductCard({ product }) {
     };
 
     return (
-        <div className="border rounded-xl shadow-md p-4 flex flex-col items-center bg-white">
-            <img src={product.image} alt={product.name} className="w-40 h-40 object-cover mb-4 rounded-lg" />
-            <h3 className="text-lg font-semibold">{product.name}</h3>
-            <p className="text-gray-600">₹{product.pricePerKg} / kg</p>
-
-            <div className="mt-4 flex flex-col items-center gap-3">
-                <div className="flex gap-2">
-                    <input
-                        type="number"
-                        min="0"
-                        value={kg}
-                        onChange={(e) => setKg(Number(e.target.value))}
-                        className="w-20 p-2 border rounded-md text-center"
-                        placeholder="Kg"
-                    />
-                    <input
-                        type="number"
-                        min="0"
-                        max="999"
-                        value={grams}
-                        onChange={(e) => setGrams(Number(e.target.value))}
-                        className="w-24 p-2 border rounded-md text-center"
-                        placeholder="Grams"
-                    />
+        <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-[400px] flex flex-col px-2 py-3 sm:px-4 sm:py-4">
+            <div className="relative h-50 bg-gray-50 flex items-center justify-center overflow-hidden">
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-50 object-cover rounded-xl group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-green-700 text-white tracking-wider text-xs font-bold px-2 py-1 rounded-lg">
+                    ₹{product.pricePerKg}/kg
                 </div>
-
-                {totalKg > 0 && (
-                    <p className="font-medium">
-                        Total: <span className="text-green-600">₹{totalPrice.toFixed(2)}</span>
-                    </p>
-                )}
-
-                <button
-                    disabled={totalKg <= 0}
-                    onClick={handleAdd}
-                    className={`px-4 py-2 rounded-lg text-white ${
-                        totalKg > 0 ? "bg-green-500 hover:bg-green-600" : "bg-gray-400 cursor-not-allowed"
-                    }`}
-                >
-                    Add to Cart
-                </button>
+            </div>
+            <div className="flex-1 p-4 flex flex-col justify-between">
+                <div className="text-center mb-3">
+                   <h3 className="text-sm sm:text-lg font-bold text-gray-800 leading-tight">{product.name}</h3>
+                </div>
+                <div className="mb-3">
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                        <input
+                            type="number"
+                            min="0"
+                            value={kg}
+                            onChange={(e) => setKg(Number(e.target.value))}
+                            className="h-9 px-3 border border-gray-300 rounded-lg text-center text-sm font-medium focus:border-green-700 focus:ring-1 focus:ring-green-700"
+                            placeholder="0 Kg"
+                        />
+                        <input
+                            type="number"
+                            min="0"
+                            max="999"
+                            value={grams}
+                            onChange={(e) => setGrams(Number(e.target.value))}
+                            className="h-9 px-3 border border-gray-300 rounded-lg text-center text-sm font-medium focus:border-green-700 focus:ring-1 focus:ring-green-700"
+                            placeholder="0 G"
+                        />
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <div className="h-6 flex items-center justify-center">
+                        {totalKg > 0 ? (
+                            <span className="text-base font-bold text-dark1">Total: ₹{totalPrice.toFixed(2)}</span>
+                        ) : (
+                            <span className="text-xs text-gray-400">Select quantity</span>
+                        )}
+                    </div>
+                    <button
+                        disabled={totalKg <= 0}
+                        onClick={handleAdd}
+                        className={`w-full h-10 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                            totalKg > 0
+                                ? "bg-dark1 text-white transform hover:scale-105 shadow-lg"
+                                : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        }`}
+                    >
+                        Add to Cart
+                    </button>
+                </div>
             </div>
         </div>
     );

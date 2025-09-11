@@ -20,12 +20,16 @@ export default function Products() {
                 setLoading(false);
             });
     }, []);
+
     if (loading) return <Loading />;
+
     return (
-        <div>
-            {products.map((product) => (
-                <ProductCard key={product._id} product={product} />
-            ))}
-        </div>
+        <main className="mx-auto max-w-screen-2xl px-4 md:px-6 py-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {products.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                ))}
+            </div>
+        </main>
     );
 }
