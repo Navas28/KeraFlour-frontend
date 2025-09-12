@@ -19,12 +19,12 @@ export default function ProductCard({ product }) {
     };
 
     return (
-        <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-[400px] flex flex-col px-2 py-3 sm:px-4 sm:py-4">
-            <div className="relative h-50 bg-gray-50 flex items-center justify-center overflow-hidden">
+        <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-[500px] flex flex-col px-2 py-3 sm:px-2 sm:py-4">
+            <div className="relative h-60 flex items-center justify-center overflow-hidden">
                 <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-50 object-cover rounded-xl group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-60 object-cover rounded-xl group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-3 right-3 bg-green-700 text-white tracking-wider text-xs font-bold px-2 py-1 rounded-lg">
                     ₹{product.pricePerKg}/kg

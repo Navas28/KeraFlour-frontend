@@ -161,8 +161,6 @@ export default function CreateProduct() {
                                 )}
                             </div>
                         </div>
-
-                        {/* Submit Button */}
                         <div className="pt-6">
                             <button
                                 type="submit"

@@ -135,7 +135,7 @@ export default function ProductPage() {
                             key={product._id}
                             className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                         >
-                            <div className="aspect-square bg-gray-50 flex items-center justify-center p-4">
+                            <div className="aspect-square flex items-center justify-center p-4">
                                 <img
                                     src={product.image}
                                     alt={product.name}

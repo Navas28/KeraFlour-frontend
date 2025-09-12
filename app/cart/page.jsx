@@ -210,8 +210,20 @@ export default function CartPage() {
                         type="time"
                         min="09:00"
                         max="18:00"
+                        step="900"
                         value={time}
-                        onChange={(e) => setTime(e.target.value)}
+                        onChange={(e) => {
+        const selected = e.target.value;
+        const [hours, minutes] = selected.split(":").map(Number);
+
+        // block times outside 9am - 6pm
+        if (hours < 9 || (hours === 18 && minutes > 0) || hours > 18) {
+            toast.error("Bookings allowed only between 9:00 AM and 6:00 PM");
+            return;
+        }
+
+        setTime(selected);
+    }}
                         className="w-full sm:w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                 </div>
