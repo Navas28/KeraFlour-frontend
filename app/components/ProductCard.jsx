@@ -1,81 +1,52 @@
-"use client";
+import { Edit2, Trash2, Clock, IndianRupee } from "lucide-react";
+import React from "react";
 
-import { useCart } from "@/context/CartContext";
-import React, { useState } from "react";
-
-export default function ProductCard({ product }) {
-    const [kg, setKg] = useState(0);
-    const [grams, setGrams] = useState(0);
-    const { addToCart } = useCart();
-
-    const totalKg = kg + grams / 1000;
-    const totalPrice = totalKg * product.pricePerKg;
-
-    const handleAdd = () => {
-        if (totalKg <= 0) return;
-        addToCart(product, totalKg);
-        setKg(0);
-        setGrams(0);
-    };
-
-    return (
-        <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-[500px] flex flex-col px-2 py-3 sm:px-2 sm:py-4">
-            <div className="relative h-60 flex items-center justify-center overflow-hidden">
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-60 object-cover rounded-xl group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-3 right-3 bg-green-700 text-white tracking-wider text-xs font-bold px-2 py-1 rounded-lg">
-                    ₹{product.pricePerKg}/kg
-                </div>
-            </div>
-            <div className="flex-1 p-4 flex flex-col justify-between">
-                <div className="text-center mb-3">
-                   <h3 className="text-sm sm:text-lg font-bold text-gray-800 leading-tight">{product.name}</h3>
-                </div>
-                <div className="mb-3">
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                        <input
-                            type="number"
-                            min="0"
-                            value={kg}
-                            onChange={(e) => setKg(Number(e.target.value))}
-                            className="h-9 px-3 border border-gray-300 rounded-lg text-center text-sm font-medium focus:border-green-700 focus:ring-1 focus:ring-green-700"
-                            placeholder="0 Kg"
-                        />
-                        <input
-                            type="number"
-                            min="0"
-                            max="999"
-                            value={grams}
-                            onChange={(e) => setGrams(Number(e.target.value))}
-                            className="h-9 px-3 border border-gray-300 rounded-lg text-center text-sm font-medium focus:border-green-700 focus:ring-1 focus:ring-green-700"
-                            placeholder="0 G"
-                        />
-                    </div>
-                </div>
-                <div className="space-y-2">
-                    <div className="h-6 flex items-center justify-center">
-                        {totalKg > 0 ? (
-                            <span className="text-base font-bold text-dark1">Total: ₹{totalPrice.toFixed(2)}</span>
-                        ) : (
-                            <span className="text-xs text-gray-400">Select quantity</span>
-                        )}
-                    </div>
-                    <button
-                        disabled={totalKg <= 0}
-                        onClick={handleAdd}
-                        className={`w-full h-10 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                            totalKg > 0
-                                ? "bg-dark1 text-white transform hover:scale-105 shadow-lg"
-                                : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        }`}
-                    >
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
+export default function ProductCard({ product, onEdit, onDelete }) {
+  return (
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
+      <div className="relative h-48 flex items-center justify-center overflow-hidden bg-gray-50">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="text-gray-300 italic">No image</div>
+        )}
+        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-dark1 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center">
+          <IndianRupee size={12} className="mr-1" />
+          {product.pricePerKg}/kg
         </div>
-    );
+      </div>
+
+      <div className="p-5 flex flex-col flex-1">
+        <div className="mb-4">
+          <h3 className="text-lg font-bold text-gray-800 leading-tight mb-1">
+            {product.name}
+          </h3>
+          <div className="flex items-center text-gray-500 text-sm">
+            <Clock size={14} className="mr-1.5 text-emerald-600" />
+            <span>{product.grindingTimePerKg || 10} mins / kg</span>
+          </div>
+        </div>
+
+        <div className="mt-auto flex gap-2">
+          <button
+            onClick={() => onEdit(product)}
+            className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl bg-gray-100 text-gray-700 hover:bg-emerald-600 hover:text-white font-semibold transition-all duration-200"
+          >
+            <Edit2 size={16} />
+            <span>Edit</span>
+          </button>
+          <button
+            onClick={() => onDelete(product._id)}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
