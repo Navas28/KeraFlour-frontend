@@ -6,3 +6,9 @@
     --color-light1: #86a69f;
     --color-light2: #53756e;
 }
+
+/* Hide default browser password reveal eye */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}

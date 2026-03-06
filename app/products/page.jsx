@@ -12,6 +12,7 @@ import {
   Loader2,
   IndianRupee,
   Clock,
+  Package,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -188,10 +189,7 @@ export default function ProductsPage() {
           ))}
           {products.length === 0 && (
             <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-200">
-              <UtensilsCrossed
-                size={48}
-                className="mx-auto text-gray-300 mb-4"
-              />
+              <Package size={48} className="mx-auto text-gray-300 mb-4" />
               <p className="text-gray-500 font-medium">
                 No products found. Add your first grain type!
               </p>
@@ -200,7 +198,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div
@@ -222,7 +219,6 @@ export default function ProductsPage() {
 
             <form onSubmit={handleSubmit} className="p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left: Form Fields */}
                 <div className="space-y-5">
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
@@ -280,7 +276,7 @@ export default function ProductsPage() {
                               grindingTimePerKg: e.target.value,
                             })
                           }
-                          placeholder="10"
+                          placeholder="5"
                           className="w-full h-12 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
@@ -288,7 +284,6 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                {/* Right: Image Upload */}
                 <div className="space-y-4">
                   <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
                     Representative Image
@@ -356,7 +351,6 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -367,9 +361,4 @@ export default function ProductsPage() {
       />
     </main>
   );
-}
-
-function UtensilsCrossed({ size, className }) {
-  // Basic replacement if I don't want to import another icon just for one place
-  return <Package size={size} className={className} />;
 }

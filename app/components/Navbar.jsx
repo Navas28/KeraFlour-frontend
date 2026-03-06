@@ -85,7 +85,17 @@ export default function Navbar() {
                       </p>
                       <p className="text-xs text-gray-500">{user?.email}</p>
                     </div>
-                    <div className="border-t border-gray-50 mt-2 pt-2">
+                    <div className="py-1">
+                      <Link
+                        href="/settings"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <ShieldUser size={16} className="mr-2 text-gray-400" />
+                        Account Settings
+                      </Link>
+                    </div>
+                    <div className="border-t border-gray-50 mt-1 pt-1">
                       <button
                         onClick={() => {
                           logout();
@@ -137,6 +147,13 @@ export default function Navbar() {
                 className="block px-4 py-3 text-gray-700 hover:bg-green-100 rounded-lg font-medium"
               >
                 Products
+              </Link>
+              <Link
+                href="/settings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 text-gray-700 hover:bg-green-100 rounded-lg font-medium"
+              >
+                Settings
               </Link>
 
               {!user && (
