@@ -15,6 +15,27 @@ import PasswordInput from "../components/UI/PasswordInput";
 import api from "@/lib/api";
 import { toast } from "sonner";
 
+const InputField = ({
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  icon: Icon,
+}) => (
+  <div className="relative group">
+    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-emerald-500 transition-colors">
+      <Icon size={18} strokeWidth={2.5} />
+    </div>
+    <input
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full h-14 pl-12 pr-6 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-slate-900 font-black text-sm placeholder:text-slate-200 focus:bg-white focus:border-emerald-400 outline-none transition-all"
+    />
+  </div>
+);
+
 export default function SignupPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -47,27 +68,6 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
-
-  const InputField = ({
-    type = "text",
-    placeholder,
-    value,
-    onChange,
-    icon: Icon,
-  }) => (
-    <div className="relative group">
-      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-emerald-500 transition-colors">
-        <Icon size={18} strokeWidth={2.5} />
-      </div>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="w-full h-14 pl-12 pr-6 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-slate-900 font-black text-sm placeholder:text-slate-200 focus:bg-white focus:border-emerald-400 outline-none transition-all"
-      />
-    </div>
-  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50/50 p-6">
