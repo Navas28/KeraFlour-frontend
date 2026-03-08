@@ -44,18 +44,9 @@ const STATUS_LEVELS = [
     active: "bg-amber-600 text-white border-amber-600",
   },
   {
-    id: "packed",
-    label: "Packed",
-    color: "bg-red-500",
-    text: "text-red-700",
-    bg: "bg-red-50",
-    border: "border-red-200",
-    active: "bg-red-600 text-white border-red-600",
-  },
-  {
     id: "maintenance",
     label: "Service",
-    color: "bg-slate-500",
+    color: "bg-slate-400",
     text: "text-slate-600",
     bg: "bg-slate-50",
     border: "border-slate-200",
@@ -108,6 +99,14 @@ export default function Home() {
     reason: "",
   });
 
+  // Pulse Modal State
+  const [isPulseModalOpen, setIsPulseModalOpen] = useState(false);
+  const [pulseData, setPulseData] = useState({
+    machineType: "grain",
+    statusId: "free",
+    minutes: "30",
+  });
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -130,7 +129,6 @@ export default function Home() {
     if (user) fetchData();
   }, [user]);
 
-  // --- Product Functions ---
   const resetProductForm = () => {
     setProductFormData({
       name: "",
@@ -209,16 +207,23 @@ export default function Home() {
     }
   };
 
-  const updateMachineStatus = async (machineType, statusId) => {
+  const updateMachineStatus = async (machineType, statusId, minutes = null) => {
     try {
+      let estimatedFreeAt = null;
+      if (minutes) {
+        estimatedFreeAt = new Date(Date.now() + parseInt(minutes) * 60000);
+      }
+
       const { data } = await api.post("/api/admin/machine-status", {
         machineType,
         status: statusId,
+        estimatedFreeAt,
       });
       setMachineStatuses((prev) =>
         prev.map((s) => (s.machineType === machineType ? data : s)),
       );
       toast.success(`${machineType.toUpperCase()} status updated`);
+      setIsPulseModalOpen(false);
     } catch (error) {
       toast.error("Failed to update pulse");
     }
@@ -227,16 +232,15 @@ export default function Home() {
   if (authLoading || loading) return <Loading />;
 
   return (
-    <main className="min-h-screen bg-amber-50/20 p-5 lg:p-10">
+    <main className="min-h-screen bg-slate-50/50 p-5 lg:p-10">
       <div className="max-w-7xl mx-auto space-y-10">
-        {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-black text-amber-900 tracking-tight">
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
               Mill Management Hub
             </h1>
-            <p className="text-amber-500 font-medium mt-1">
-              Control your products, machine pulse, and schedule in one place.
+            <p className="text-emerald-600 font-bold uppercase tracking-widest text-[10px] mt-1">
+              Control your products, machine pulse, and schedule.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -245,9 +249,9 @@ export default function Home() {
                 resetProductForm();
                 setIsProductModalOpen(true);
               }}
-              className="flex items-center gap-2 bg-amber-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-800 transition-all shadow-md active:scale-95"
+              className="flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs hover:bg-emerald-700 transition-all shadow-lg active:scale-95"
             >
-              <Plus size={18} /> Add Product
+              <Plus size={18} strokeWidth={3} /> Add Product
             </button>
             <button
               onClick={() => {
@@ -255,26 +259,25 @@ export default function Home() {
                 setScheduleFormData({ ...scheduleFormData, type: "holiday" });
                 setIsScheduleModalOpen(true);
               }}
-              className="flex items-center gap-2 bg-white text-amber-800 px-5 py-2.5 rounded-xl font-bold text-sm border-2 border-amber-100 hover:bg-amber-50 transition-all shadow-sm"
+              className="flex items-center gap-2 bg-white text-slate-700 px-6 py-3 rounded-2xl font-black text-xs border border-slate-200 hover:bg-slate-50 transition-all shadow-sm"
             >
-              <CalendarIcon size={18} /> Mark Holiday
+              <CalendarIcon size={18} strokeWidth={3} /> Mark Holiday
             </button>
           </div>
         </div>
 
-        {/* Pulse & Stats Control Area */}
-        <div className="bg-white rounded-3xl border border-amber-100 shadow-xl overflow-hidden">
-          <div className="px-8 py-6 border-b border-amber-50 bg-amber-50/30 flex items-center justify-between">
+        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
+          <div className="px-8 py-6 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-black text-amber-900">
+              <h2 className="text-lg font-black text-slate-900">
                 Live Pulse Control
               </h2>
-              <p className="text-sm text-amber-400 font-medium whitespace-nowrap">
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">
                 Instant status updates for customers
               </p>
             </div>
-            <div className="h-10 w-10 bg-amber-100 rounded-2xl flex items-center justify-center">
-              <Zap size={20} className="text-amber-700" fill="currentColor" />
+            <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center border border-emerald-100">
+              <Zap size={22} className="text-emerald-600" fill="currentColor" />
             </div>
           </div>
           <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -286,37 +289,54 @@ export default function Home() {
               return (
                 <div
                   key={type}
-                  className="bg-amber-50/40 rounded-2xl p-6 border border-amber-100/50"
+                  className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 shadow-sm"
                 >
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-8">
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 mb-1 block">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 mb-1 block">
                         {type} Machine
                       </span>
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <div
-                          className={`h-2.5 w-2.5 rounded-full ${level?.color} animate-pulse`}
+                          className={`h-3 w-3 rounded-full ${level?.color} shadow-sm animate-pulse`}
                         />
-                        <span className="text-base font-black text-amber-900 capitalize">
+                        <span className="text-lg font-black text-slate-900 capitalize">
                           {level?.label}
                         </span>
                       </div>
                     </div>
-                    <Clock size={22} className="text-amber-200" />
+                    <div className="h-10 w-10 items-center justify-center flex bg-white rounded-xl shadow-sm border border-slate-100">
+                      <Clock
+                        size={20}
+                        className="text-slate-300"
+                        strokeWidth={3}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                     {STATUS_LEVELS.map((lvl) => (
                       <button
                         key={lvl.id}
-                        onClick={() => updateMachineStatus(type, lvl.id)}
-                        className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 font-black text-xs transition-all ${
+                        onClick={() => {
+                          if (lvl.id === "busy") {
+                            setPulseData({
+                              machineType: type,
+                              statusId: lvl.id,
+                              minutes: "30",
+                            });
+                            setIsPulseModalOpen(true);
+                          } else {
+                            updateMachineStatus(type, lvl.id);
+                          }
+                        }}
+                        className={`flex items-center justify-center gap-2 py-4 px-4 rounded-[1.25rem] border-2 font-black text-xs transition-all ${
                           curStatus === lvl.id
                             ? lvl.active
                             : `bg-white ${lvl.border} ${lvl.text} hover:${lvl.bg}`
                         }`}
                       >
                         <div
-                          className={`w-1.5 h-1.5 rounded-full ${curStatus === lvl.id ? "bg-white" : lvl.color}`}
+                          className={`w-2 h-2 rounded-full ${curStatus === lvl.id ? "bg-white" : lvl.color}`}
                         />
                         {lvl.label}
                       </button>
@@ -328,20 +348,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Main Management Tabs/Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Service Catalog - 2/3 width */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black text-amber-900 flex items-center gap-3">
-                <Package className="text-amber-500" /> Service Catalog
+              <h2 className="text-2xl font-black text-slate-900 flex items-center gap-4">
+                <Package
+                  className="text-emerald-500"
+                  size={28}
+                  strokeWidth={3}
+                />{" "}
+                Service Catalog
               </h2>
-              <span className="text-xs font-black text-amber-500 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
-                {products.length} ITEMS
+              <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100 uppercase tracking-widest">
+                {products.length} Items
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {products.map((product) => (
                 <ProductCard
                   key={product._id}
@@ -369,13 +392,18 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h2 className="text-xl font-black text-amber-900 flex items-center gap-3">
-              <CalendarIcon className="text-amber-500" /> Planned Closures
+          <div className="space-y-8">
+            <h2 className="text-2xl font-black text-slate-900 flex items-center gap-4">
+              <CalendarIcon
+                className="text-emerald-500"
+                size={28}
+                strokeWidth={3}
+              />{" "}
+              Planned Closures
             </h2>
 
-            <div className="bg-white rounded-3xl border border-amber-100 p-6 space-y-4 shadow-sm">
-              <div className="flex gap-2">
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 space-y-6 shadow-xl">
+              <div className="flex gap-3">
                 <button
                   onClick={() => {
                     setScheduleModalType("holiday");
@@ -385,7 +413,7 @@ export default function Home() {
                     });
                     setIsScheduleModalOpen(true);
                   }}
-                  className="flex-1 bg-amber-50 text-amber-800 py-3 rounded-2xl font-black text-xs border border-amber-100 hover:bg-amber-100 transition-all"
+                  className="flex-1 bg-slate-50 text-slate-700 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest border border-slate-100 hover:bg-slate-100 transition-all"
                 >
                   Holiday
                 </button>
@@ -398,58 +426,59 @@ export default function Home() {
                     });
                     setIsScheduleModalOpen(true);
                   }}
-                  className="flex-1 bg-amber-50 text-amber-800 py-3 rounded-2xl font-black text-xs border border-amber-100 hover:bg-amber-100 transition-all"
+                  className="flex-1 bg-slate-50 text-slate-700 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest border border-slate-100 hover:bg-slate-100 transition-all"
                 >
                   Weekly Off
                 </button>
               </div>
 
-              <div className="space-y-3 pt-2">
+              <div className="space-y-4 pt-2">
                 {configs
                   .filter((c) => c.type === "holiday" || c.isClosed)
                   .map((config) => (
                     <div
                       key={config._id}
-                      className="flex items-center justify-between p-4 bg-amber-50/50 rounded-2xl border border-amber-100/30 group"
+                      className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 group shadow-sm"
                     >
                       <div className="flex items-center gap-4">
                         <div
-                          className={`p-2 rounded-xl ${config.type === "holiday" ? "bg-amber-700" : "bg-amber-200"}`}
+                          className={`p-2.5 rounded-xl ${config.type === "holiday" ? "bg-emerald-600" : "bg-emerald-100"}`}
                         >
                           <CalendarIcon
-                            size={14}
+                            size={16}
+                            strokeWidth={3}
                             className={
                               config.type === "holiday"
                                 ? "text-white"
-                                : "text-amber-700"
+                                : "text-emerald-700"
                             }
                           />
                         </div>
                         <div>
-                          <p className="text-sm font-black text-amber-900 leading-tight">
+                          <p className="text-sm font-black text-slate-900 leading-tight">
                             {config.type === "holiday"
                               ? config.date
                               : `Every ${DAYS[config.dayOfWeek]}`}
                           </p>
-                          <p className="text-[10px] font-bold text-amber-400 uppercase tracking-wider mt-0.5">
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
                             {config.reason || "Closed"}
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => handleDeleteConfig(config._id)}
-                        className="p-2 text-amber-200 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-2 text-slate-200 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   ))}
 
                 {configs.filter((c) => c.type === "holiday" || c.isClosed)
                   .length === 0 && (
-                  <div className="py-10 text-center">
-                    <p className="text-amber-300 font-black text-xs ">
-                      NO SCHEDULED OFF-DAYS
+                  <div className="py-12 text-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
+                    <p className="text-slate-300 font-black text-[10px] uppercase tracking-[0.2em] ">
+                      No Scheduled Off-Days
                     </p>
                   </div>
                 )}
@@ -460,30 +489,30 @@ export default function Home() {
       </div>
 
       {isProductModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-amber-950/40 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-amber-100">
-            <div className="px-10 py-8 bg-amber-50/50 border-b border-amber-50 flex items-center justify-between">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100">
+            <div className="px-12 py-10 bg-slate-50/50 border-b border-slate-50 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-black text-amber-900">
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight">
                   {editingProduct ? "Edit Product" : "New Catalog Item"}
                 </h2>
-                <p className="text-sm text-amber-400 font-bold tracking-wide uppercase mt-0.5">
+                <p className="text-[10px] text-emerald-600 font-black tracking-[0.2em] uppercase mt-1">
                   Grain details & pricing
                 </p>
               </div>
               <button
                 onClick={() => setIsProductModalOpen(false)}
-                className="w-10 h-10 flex items-center justify-center bg-white rounded-2xl border border-amber-100 text-amber-400 hover:text-amber-900 transition-all"
+                className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl border border-slate-100 text-slate-400 hover:text-slate-900 transition-all shadow-sm"
               >
-                <X size={20} />
+                <X size={24} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleProductSubmit} className="p-10 space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
+            <form onSubmit={handleProductSubmit} className="p-12 space-y-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-8">
                   <div>
-                    <label className="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 block">
-                      Name
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block">
+                      Product Name
                     </label>
                     <input
                       type="text"
@@ -494,13 +523,13 @@ export default function Home() {
                           name: e.target.value,
                         })
                       }
-                      className="w-full bg-amber-50/50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 focus:border-amber-400 focus:bg-white outline-none transition-all"
+                      className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 focus:border-emerald-400 focus:bg-white outline-none transition-all placeholder:text-slate-200"
                       placeholder="e.g. Matta Rice"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-5">
                     <div>
-                      <label className="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 block">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block">
                         Price (₹/kg)
                       </label>
                       <input
@@ -512,11 +541,11 @@ export default function Home() {
                             pricePerKg: e.target.value,
                           })
                         }
-                        className="w-full bg-amber-50/50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 focus:border-amber-400 focus:bg-white outline-none transition-all"
+                        className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 focus:border-emerald-400 focus:bg-white outline-none transition-all"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 block">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block">
                         Min/kg
                       </label>
                       <input
@@ -528,44 +557,53 @@ export default function Home() {
                             grindingTimePerKg: e.target.value,
                           })
                         }
-                        className="w-full bg-amber-50/50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 focus:border-amber-400 focus:bg-white outline-none transition-all"
+                        className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 focus:border-emerald-400 focus:bg-white outline-none transition-all"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 block">
-                      Machine
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block">
+                      Processing Machine
                     </label>
-                    <select
-                      value={productFormData.machineType}
-                      onChange={(e) =>
-                        setProductFormData({
-                          ...productFormData,
-                          machineType: e.target.value,
-                        })
-                      }
-                      className="w-full bg-amber-50/50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 focus:border-amber-400 focus:bg-white outline-none transition-all appearance-none"
-                    >
-                      <option value="grain">Grain Machine</option>
-                      <option value="spice">Spice Machine</option>
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={productFormData.machineType}
+                        onChange={(e) =>
+                          setProductFormData({
+                            ...productFormData,
+                            machineType: e.target.value,
+                          })
+                        }
+                        className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 focus:border-emerald-400 focus:bg-white outline-none transition-all appearance-none"
+                      >
+                        <option value="grain">Grain Machine</option>
+                        <option value="spice">Spice Machine</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 block">
-                    Image
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block">
+                    Catalog Image
                   </label>
-                  <label className="relative h-full min-h-[160px] w-full bg-amber-50 rounded-[2rem] border-3 border-dashed border-amber-100 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 hover:bg-white overflow-hidden group transition-all">
+                  <label className="relative h-full min-h-[220px] w-full bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/30 overflow-hidden group transition-all shadow-inner">
                     {previewUrl ? (
                       <img
                         src={previewUrl}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
-                      <Upload
-                        size={32}
-                        className="text-amber-200 group-hover:text-amber-500 transition-colors"
-                      />
+                      <div className="items-center flex flex-col gap-3">
+                        <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-100">
+                          <Upload
+                            size={28}
+                            className="text-slate-300 group-hover:text-emerald-500 transition-colors"
+                          />
+                        </div>
+                        <Text className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                          Select Image
+                        </Text>
+                      </div>
                     )}
                     <input
                       type="file"
@@ -585,21 +623,21 @@ export default function Home() {
                   </label>
                 </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsProductModalOpen(false)}
-                  className="flex-1 py-4 font-black text-amber-400 border-2 border-amber-50 rounded-2xl hover:bg-amber-50 transition-all"
+                  className="flex-1 py-5 font-black text-slate-400 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all uppercase tracking-widest text-[11px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingProduct}
-                  className="flex-[2] bg-amber-700 text-white font-black py-4 rounded-2xl hover:bg-amber-800 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                  className="flex-[2] bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-[11px]"
                 >
                   {isSavingProduct ? (
-                    <Loader2 className="animate-spin mx-auto" />
+                    <Loader2 className="animate-spin mx-auto text-white" />
                   ) : editingProduct ? (
                     "Update Catalog"
                   ) : (
@@ -613,35 +651,35 @@ export default function Home() {
       )}
 
       {isScheduleModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-amber-950/40 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl border border-amber-100">
-            <div className="flex items-center justify-between mb-8">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="bg-white w-full max-w-md rounded-[3rem] p-12 shadow-2xl border border-slate-100">
+            <div className="flex items-center justify-between mb-10">
               <div>
-                <h3 className="text-xl font-black text-amber-900">
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">
                   {scheduleModalType === "holiday"
                     ? "Mark Holiday"
                     : "Weekly Schedule"}
                 </h3>
-                <p className="text-xs font-bold text-amber-400 uppercase tracking-widest mt-1">
+                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">
                   Calendar & Off-Days
                 </p>
               </div>
               <button
                 onClick={() => setIsScheduleModalOpen(false)}
-                className="text-amber-200 hover:text-amber-900 transition-colors"
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-300 hover:text-slate-900 transition-colors"
               >
-                <X size={24} />
+                <X size={20} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleScheduleSubmit} className="space-y-6">
+            <form onSubmit={handleScheduleSubmit} className="space-y-8">
               {scheduleModalType === "holiday" ? (
                 <div>
-                  <label className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-2 block">
-                    Date
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">
+                    Holiday Date
                   </label>
                   <input
                     type="date"
-                    className="w-full bg-amber-50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 outline-none focus:border-amber-400 transition-all"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 outline-none focus:border-emerald-400 transition-all font-mono"
                     value={scheduleFormData.date}
                     onChange={(e) =>
                       setScheduleFormData({
@@ -653,11 +691,11 @@ export default function Home() {
                 </div>
               ) : (
                 <div>
-                  <label className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-2 block">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">
                     Day of Week
                   </label>
                   <select
-                    className="w-full bg-amber-50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 outline-none focus:border-amber-400 transition-all"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 outline-none focus:border-emerald-400 transition-all appearance-none"
                     value={scheduleFormData.dayOfWeek}
                     onChange={(e) =>
                       setScheduleFormData({
@@ -675,13 +713,13 @@ export default function Home() {
                 </div>
               )}
               <div>
-                <label className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-2 block">
-                  Reason / Info
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">
+                  Closed Reason
                 </label>
                 <input
                   type="text"
                   placeholder="e.g. Festival Closure"
-                  className="w-full bg-amber-50 border-2 border-amber-100 rounded-2xl px-5 py-3.5 font-bold text-amber-900 outline-none focus:border-amber-400 transition-all"
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 outline-none focus:border-emerald-400 transition-all placeholder:text-slate-200"
                   value={scheduleFormData.reason}
                   onChange={(e) =>
                     setScheduleFormData({
@@ -693,9 +731,9 @@ export default function Home() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-amber-700 text-white font-black py-4 rounded-2xl hover:bg-amber-800 transition-all shadow-lg shadow-amber-900/10 active:scale-95"
+                className="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 uppercase tracking-widest text-[11px]"
               >
-                Save Changes
+                Save Schedule
               </button>
             </form>
           </div>
@@ -710,6 +748,59 @@ export default function Home() {
         title="Remove Item?"
         message="This product will be permanently deleted from the catalog and mobile app."
       />
+
+      {isPulseModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="bg-white w-full max-w-sm rounded-[3rem] p-12 shadow-2xl border border-slate-100">
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">
+              Set Manual Time
+            </h3>
+            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-8 block">
+              Estimated Finish Time
+            </p>
+            <div className="space-y-10">
+              <div>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block">
+                  Minutes to complete
+                </label>
+                <div className="flex items-center gap-5">
+                  <input
+                    type="number"
+                    className="flex-1 bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 outline-none focus:border-emerald-400 transition-all text-center text-xl"
+                    value={pulseData.minutes}
+                    onChange={(e) =>
+                      setPulseData({ ...pulseData, minutes: e.target.value })
+                    }
+                  />
+                  <span className="font-black text-slate-300 text-sm uppercase">
+                    Min
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setIsPulseModalOpen(false)}
+                  className="flex-1 py-5 font-black text-slate-400 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all uppercase tracking-widest text-[10px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() =>
+                    updateMachineStatus(
+                      pulseData.machineType,
+                      pulseData.statusId,
+                      pulseData.minutes,
+                    )
+                  }
+                  className="flex-[2] bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 uppercase tracking-widest text-[10px]"
+                >
+                  Set Pulse
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

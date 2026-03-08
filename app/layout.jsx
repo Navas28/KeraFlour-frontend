@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="KeraFlour" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={inter.className} style={{ backgroundColor: "#faf8f5" }}>
+      <body className={inter.className} style={{ backgroundColor: "#f8fafc" }}>
         <AuthProvider>
           <Navbar />
           {children}

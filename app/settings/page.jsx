@@ -41,56 +41,64 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-amber-50/30 p-5 lg:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-7">
-          <h1 className="text-2xl font-extrabold text-amber-900">
-            Account Settings
+    <main className="min-h-screen bg-slate-50/50 p-5 lg:p-10">
+      <div className="max-w-5xl mx-auto space-y-10">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+            Account Management
           </h1>
-          <p className="text-amber-500 text-sm mt-1 font-medium">
-            Manage your administrator account credentials.
+          <p className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.25em] mt-1">
+            Secure your administrator access center.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-7 text-center">
-              <div className="w-18 h-18 bg-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md w-[72px] h-[72px]">
-                <ShieldCheck className="text-white" size={32} />
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl p-10 text-center">
+              <div className="w-[100px] h-[100px] bg-emerald-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-600/20">
+                <ShieldCheck
+                  className="text-white"
+                  size={48}
+                  strokeWidth={2.5}
+                />
               </div>
-              <h2 className="text-lg font-bold text-amber-900 mb-0.5">
+              <h2 className="text-xl font-black text-slate-900 mb-1">
                 {user?.name}
               </h2>
-              <p className="text-sm text-amber-400 font-medium mb-4 break-all">
+              <p className="text-sm text-slate-400 font-bold mb-6 break-all lowercase">
                 {user?.email}
               </p>
-              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase tracking-widest border border-amber-200">
-                <User size={11} />
+              <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-100">
+                <User size={12} strokeWidth={3} />
                 Administrator
               </span>
             </div>
           </div>
 
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-7">
-              <div className="flex items-center gap-3 mb-7">
-                <div className="p-2 bg-amber-100 rounded-xl">
-                  <KeyRound size={18} className="text-amber-700" />
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl p-10">
+              <div className="flex items-center gap-5 mb-10 pb-6 border-b border-slate-50">
+                <div className="h-14 w-14 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center">
+                  <KeyRound
+                    size={24}
+                    className="text-emerald-600"
+                    strokeWidth={2.5}
+                  />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-amber-900">
-                    Update Password
+                  <h2 className="text-lg font-black text-slate-900">
+                    Credentials & Access
                   </h2>
-                  <p className="text-xs text-amber-400 mt-0.5">
-                    Change your access credentials
+                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">
+                    Update your secure portal password
                   </p>
                 </div>
               </div>
 
-              <form onSubmit={handleChangePassword} className="space-y-5">
+              <form onSubmit={handleChangePassword} className="space-y-8">
                 <div>
-                  <label className="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-1.5">
-                    Current Password
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                    Your Current Password
                   </label>
                   <PasswordInput
                     value={passwords.oldPassword}
@@ -100,14 +108,14 @@ export default function SettingsPage() {
                         oldPassword: e.target.value,
                       })
                     }
-                    placeholder="Type your current password"
+                    placeholder="Type current password"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-1.5">
-                      New Password
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                      New Secret Key
                     </label>
                     <PasswordInput
                       value={passwords.newPassword}
@@ -121,8 +129,8 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-1.5">
-                      Confirm Password
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                      Verify New Key
                     </label>
                     <PasswordInput
                       value={passwords.confirmPassword}
@@ -132,23 +140,27 @@ export default function SettingsPage() {
                           confirmPassword: e.target.value,
                         })
                       }
-                      placeholder="Repeat new password"
+                      placeholder="Repeat new key"
                     />
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-amber-50 flex justify-end">
+                <div className="pt-6 border-t border-slate-50 flex justify-end">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="h-11 px-8 bg-amber-700 text-white rounded-xl font-bold flex items-center justify-center gap-2.5 hover:bg-amber-800 transition-all active:scale-[0.98] disabled:opacity-50 shadow-sm text-sm"
+                    className="h-14 px-10 bg-emerald-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-700 transition-all active:scale-95 disabled:opacity-50 shadow-xl shadow-emerald-600/20"
                   >
                     {loading ? (
-                      <Loader2 className="animate-spin" size={16} />
+                      <Loader2
+                        className="animate-spin text-white"
+                        size={18}
+                        strokeWidth={3}
+                      />
                     ) : (
-                      <Save size={16} />
+                      <Save size={18} strokeWidth={3} />
                     )}
-                    <span>Update Credentials</span>
+                    <span>Apply Changes</span>
                   </button>
                 </div>
               </form>

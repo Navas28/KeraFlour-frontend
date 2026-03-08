@@ -1,45 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  /* Mill-inspired warm, earthy color palette */
-  --color-brand-50: #fefce8;
-  --color-brand-100: #fef9c3;
-  --color-brand-200: #fef08a;
-  --color-brand-300: #fde047;
-  --color-brand-400: #facc15;
-  --color-brand-500: #eab308;
-  --color-brand-600: #ca8a04;
-  --color-brand-700: #a16207;
-  --color-brand-800: #854d0e;
-  --color-brand-900: #713f12;
+  /* Slate & Emerald Premium Palette */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
 
-  --color-mill-50: #fdf8f0;
-  --color-mill-100: #faefd4;
-  --color-mill-200: #f4d9a0;
-  --color-mill-300: #edb96a;
-  --color-mill-400: #e59841;
-  --color-mill-500: #d97b22;
-  --color-mill-600: #c05e18;
-  --color-mill-700: #9a4516;
-  --color-mill-800: #7c3618;
-  --color-mill-900: #662d18;
-
-  --color-earth-50: #faf6f1;
-  --color-earth-100: #f2e8d9;
-  --color-earth-200: #e3ccb2;
-  --color-earth-300: #d0a87e;
-  --color-earth-400: #be8754;
-  --color-earth-500: #ad6e37;
-  --color-earth-600: #9a5a2e;
-  --color-earth-700: #7e4826;
-  --color-earth-800: #663b22;
-  --color-earth-900: #54311e;
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
 }
 
 /* Base body styles */
 body {
-  background-color: #faf8f5;
-  color: #1a1108;
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family:
+    var(--font-inter),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif;
 }
 
 /* Hide default browser password reveal eye */
@@ -53,12 +54,12 @@ input::-ms-clear {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf8f5;
+  background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d0a87e;
+  background: #cbd5e1;
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #be8754;
+  background: #94a3b8;
 }
