@@ -43,7 +43,6 @@ export default function SettingsPage() {
   return (
     <main className="min-h-screen bg-amber-50/30 p-5 lg:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Page Header */}
         <div className="mb-7">
           <h1 className="text-2xl font-extrabold text-amber-900">
             Account Settings
@@ -54,7 +53,6 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-7 text-center">
               <div className="w-18 h-18 bg-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md w-[72px] h-[72px]">
@@ -73,7 +71,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Password Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-7">
               <div className="flex items-center gap-3 mb-7">

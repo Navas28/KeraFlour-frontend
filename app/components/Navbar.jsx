@@ -18,7 +18,7 @@ import ConfirmModal from "./UI/ConfirmModal";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -34,6 +34,8 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (loading || !user) return null;
 
   const handleLogout = () => {
     logout();
@@ -62,17 +64,8 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white border-b border-amber-100 shadow-sm">
-        <div className="mx-auto max-w-screen-2xl flex items-center justify-between px-6 h-16">
-          {/* Logo */}
+        <div className="mx-auto max-w-screen-2xl flex items-center justify-between px-6 h-20">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden border border-amber-200 shadow-sm">
-              <Image
-                src="/images/logo.png"
-                alt="KeraFlour Logo"
-                fill
-                className="object-contain p-0.5"
-              />
-            </div>
             <div className="flex flex-col leading-tight">
               <span className="font-extrabold text-base text-amber-900 tracking-tight leading-none">
                 KeraFlour
@@ -83,11 +76,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center space-x-1">
-            <NavItem href="/" icon={LayoutDashboard} label="Dashboard Hub" />
-          </nav>
-
-          {/* Right Side */}
           <div className="flex items-center space-x-3">
             {user ? (
               <div className="relative" ref={menuRef}>
@@ -152,7 +140,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div
           className="lg:hidden fixed inset-0 z-[100] bg-amber-950/40 backdrop-blur-sm"

@@ -366,27 +366,9 @@ export default function Home() {
                   }}
                 />
               ))}
-              <button
-                onClick={() => {
-                  resetProductForm();
-                  setIsProductModalOpen(true);
-                }}
-                className="group border-3 border-dashed border-amber-100 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-amber-400 hover:bg-white transition-all min-h-[220px]"
-              >
-                <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center group-hover:bg-amber-100 transition-colors mb-4">
-                  <Plus
-                    size={30}
-                    className="text-amber-300 group-hover:text-amber-600"
-                  />
-                </div>
-                <p className="text-amber-400 font-black text-sm uppercase tracking-widest group-hover:text-amber-900">
-                  Add New Grain
-                </p>
-              </button>
             </div>
           </div>
 
-          {/* Schedule Sidebar - 1/3 width */}
           <div className="space-y-6">
             <h2 className="text-xl font-black text-amber-900 flex items-center gap-3">
               <CalendarIcon className="text-amber-500" /> Planned Closures
@@ -477,9 +459,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* --- Modals --- */}
-
-      {/* Product Modal */}
       {isProductModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-amber-950/40 backdrop-blur-sm">
           <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-amber-100">
@@ -633,7 +612,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* Schedule Modal */}
       {isScheduleModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-amber-950/40 backdrop-blur-sm">
           <div className="bg-white w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl border border-amber-100">

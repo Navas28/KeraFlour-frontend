@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, ChevronRight, Loader2, ShieldCheck } from "lucide-react";
+import { Mail, ChevronRight, Loader2, LogIn } from "lucide-react";
 import PasswordInput from "../components/UI/PasswordInput";
 import { useAuth } from "@/context/AuthContext";
 import api from "@/lib/api";
@@ -47,15 +47,11 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-amber-50/50 p-6">
       <div className="max-w-md w-full">
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-amber-100">
-          {/* Logo & Heading */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 relative mx-auto mb-5 rounded-2xl overflow-hidden border-2 border-amber-100 shadow-md bg-white p-1">
-              <Image
-                src="/images/logo.png"
-                alt="KeraFlour Logo"
-                fill
-                className="object-contain"
-              />
+            <div className="w-20 h-20 relative mx-auto mb-5 rounded-2xl overflow-hidden  p-1">
+             <div className="w-16 h-16 bg-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-md">
+              <LogIn className="text-white" size={30} />
+            </div>
             </div>
             <h1 className="text-2xl font-extrabold text-amber-900 mb-1.5">
               Admin Login
@@ -66,7 +62,6 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* Email */}
             <div>
               <label className="block text-xs font-bold text-amber-700 uppercase tracking-wider mb-1.5">
                 Email Address
@@ -127,7 +122,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-amber-400 text-xs font-medium mt-5">
-          &copy; 2025 KeraFlour Mill Management System
+          &copy; 2026 KeraFlour Mill Management System
         </p>
       </div>
     </div>

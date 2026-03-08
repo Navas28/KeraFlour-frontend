@@ -73,7 +73,6 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center bg-amber-50/50 p-6">
       <div className="max-w-md w-full">
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-amber-100">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-md">
               <ShieldAlert className="text-white" size={30} />

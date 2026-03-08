@@ -4,36 +4,34 @@ import React from "react";
 export default function ProductCard({ product, onEdit, onDelete }) {
   return (
     <div className="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-amber-100 flex flex-col">
-      {/* Image */}
-      <div className="relative h-48 flex items-center justify-center overflow-hidden bg-amber-50">
+      <div className="relative h-32 flex items-center justify-center overflow-hidden">
         {product.image ? (
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="text-amber-300 italic text-sm">No image</div>
+          <div className="text-amber-300 italic text-xs">No image</div>
         )}
-        <div className="absolute top-3 right-3 bg-white/95 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center border border-amber-100">
-          <IndianRupee size={11} className="mr-0.5" />
-          {product.pricePerKg}/kg
+        <div className="absolute top-2 right-2 bg-white/95 text-amber-800 text-[11px] font-black px-2.5 py-1 rounded-lg shadow-sm flex items-center border border-amber-50">
+          <IndianRupee size={10} className="mr-0.5" />
+          {product.pricePerKg}
         </div>
-        <div className="absolute top-3 left-3 bg-amber-700/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+        <div className="absolute top-2 left-2 bg-amber-700/90 text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
           {product.machineType || "grain"}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="mb-4">
-          <h3 className="text-base font-bold text-amber-900 leading-tight mb-1.5">
+      <div className="p-3 flex flex-col flex-1">
+        <div className="mb-3">
+          <h3 className="text-sm font-black text-amber-900 leading-tight mb-1">
             {product.name}
           </h3>
-          <div className="flex items-center text-amber-500 text-sm">
-            <Clock size={13} className="mr-1.5 text-amber-400" />
-            <span className="font-medium">
-              {product.grindingTimePerKg || 10} mins / kg
+          <div className="flex items-center text-amber-400 text-[11px]">
+            <Clock size={11} className="mr-1" />
+            <span className="font-bold uppercase tracking-widest">
+              {product.grindingTimePerKg || 10} min/kg
             </span>
           </div>
         </div>
@@ -41,16 +39,16 @@ export default function ProductCard({ product, onEdit, onDelete }) {
         <div className="mt-auto flex gap-2">
           <button
             onClick={() => onEdit(product)}
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-700 hover:text-white font-semibold text-sm transition-all duration-200 border border-amber-200 hover:border-amber-700"
+            className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-700 hover:text-white font-black text-[11px] transition-all duration-200 border border-amber-100"
           >
-            <Edit2 size={14} />
+            <Edit2 size={12} />
             <span>Edit</span>
           </button>
           <button
             onClick={() => onDelete(product._id)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-amber-50 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 border border-amber-200 hover:border-red-500"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 text-red-300 hover:bg-red-500 hover:text-white transition-all duration-200 border border-red-50"
           >
-            <Trash2 size={15} />
+            <Trash2 size={13} />
           </button>
         </div>
       </div>
