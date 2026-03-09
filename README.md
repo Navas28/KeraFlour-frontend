@@ -25,6 +25,10 @@ A premium, high-performance management console for the KeraFlour Mill ecosystem.
 
 ## 📸 Dashboard Preview
 
+<img width="1555" height="654" alt="admin-web-1" src="https://github.com/user-attachments/assets/2902da3f-cc7d-4e42-b32b-fe71d9bafd6c" />
+<img width="1624" height="824" alt="admin-web-3" src="https://github.com/user-attachments/assets/8785c119-4222-4c8b-bb4b-799c22201691" />
+<img width="1457" height="737" alt="admin-web-2" src="https://github.com/user-attachments/assets/bd7b6292-f971-4e9e-852e-67b2caadb6ad" />
+
 ---
 
 ## 🛠️ Tech Stack
