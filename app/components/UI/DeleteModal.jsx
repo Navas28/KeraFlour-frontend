@@ -49,7 +49,7 @@ export default function DeleteModal({
           </button>
           <button
             onClick={onConfirm}
-            disabled={isLoading}
+            disabled={true}
             className="flex-[1.5] py-4 rounded-2xl font-black bg-rose-500 text-white hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20 flex items-center justify-center gap-2 disabled:opacity-70 text-[11px] uppercase tracking-widest"
           >
             {isLoading ? (

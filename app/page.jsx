@@ -600,9 +600,9 @@ export default function Home() {
                             className="text-slate-300 group-hover:text-emerald-500 transition-colors"
                           />
                         </div>
-                        <Text className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
                           Select Image
-                        </Text>
+                        </span>
                       </div>
                     )}
                     <input
@@ -633,7 +633,7 @@ export default function Home() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSavingProduct}
+                  disabled={true}
                   className="flex-[2] bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-[11px]"
                 >
                   {isSavingProduct ? (
@@ -731,7 +731,7 @@ export default function Home() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 uppercase tracking-widest text-[11px]"
+                className="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-[11px]"
               >
                 Save Schedule
               </button>
@@ -792,7 +792,8 @@ export default function Home() {
                       pulseData.minutes,
                     )
                   }
-                  className="flex-[2] bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 uppercase tracking-widest text-[10px]"
+                  disabled={true}
+                  className="flex-[2] bg-emerald-600 text-white font-black py-5 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-[10px]"
                 >
                   Set Pulse
                 </button>

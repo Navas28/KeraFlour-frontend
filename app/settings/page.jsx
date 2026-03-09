@@ -148,7 +148,7 @@ export default function SettingsPage() {
                 <div className="pt-6 border-t border-slate-50 flex justify-end">
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={true}
                     className="h-14 px-10 bg-emerald-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-700 transition-all active:scale-95 disabled:opacity-50 shadow-xl shadow-emerald-600/20"
                   >
                     {loading ? (
